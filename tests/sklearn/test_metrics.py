@@ -147,10 +147,10 @@ def test_kl_divergence():
     y = pd.Series([0, 1, 2, 0, 0, 1, 2], index=prot_attr)
     sample_weight = [1, 2, 3, 4, 4, 3, 3]
     kld = kl_divergence(y, priv_group=1, sample_weight=sample_weight)
-    assert np.isclose(kld, (5*np.log(5/4) + 2*np.log(2/3) + 3*np.log(3/3))/10)
+    assert np.isclose(kld, (5*np.log(5/4) + 2*np.log(2/3) + 3 * np.log(1)) / 10)
 
     kld = kl_divergence(y, priv_group=0, sample_weight=sample_weight)
-    assert np.isclose(kld, (4*np.log(4/5) + 3*np.log(3/2) + 3*np.log(3/3))/10)
+    assert np.isclose(kld, (4*np.log(4/5) + 3*np.log(3/2) + 3 * np.log(1)) / 10)
 
 def test_conditional_demographic_disparity():
     prot_attr = pd.Series([0, 0, 1, 1, 2, 2, 2], name='sex')

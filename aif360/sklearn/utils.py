@@ -30,8 +30,7 @@ def check_inputs(X, y, sample_weight=None, ensure_2d=True):
               ones.
     """
     if ensure_2d and X.ndim != 2:
-        raise ValueError("Expected X to be 2D, got ndim == {} instead.".format(
-                X.ndim))
+        raise ValueError(f"Expected X to be 2D, got ndim == {X.ndim} instead.")
     if not isinstance(y, pd.Series):  # don't cast Series -> ndarray
         y = column_or_1d(y)
     if sample_weight is not None:

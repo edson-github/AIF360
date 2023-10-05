@@ -8,8 +8,9 @@ try:
     import tensorflow.compat.v1 as tf
 except ImportError as error:
     from logging import warning
-    warning("{}: AdversarialDebiasing will be unavailable. To install, run:\n"
-            "pip install 'aif360[AdversarialDebiasing]'".format(error))
+    warning(
+        f"{error}: AdversarialDebiasing will be unavailable. To install, run:\npip install 'aif360[AdversarialDebiasing]'"
+    )
 
 from aif360.sklearn.utils import check_inputs, check_groups
 
@@ -297,9 +298,7 @@ class AdversarialDebiasing(BaseEstimator, ClassifierMixin):
         while samples_covered < n_samples:
             start = samples_covered
             end = samples_covered + self.batch_size
-            if end > n_samples:
-                end = n_samples
-
+            end = min(end, n_samples)
             batch_ids = np.arange(start, end)
             batch_features = X.iloc[batch_ids]
 

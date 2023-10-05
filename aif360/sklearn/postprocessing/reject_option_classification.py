@@ -129,21 +129,24 @@ class RejectOptionClassifier(BaseEstimator, ClassifierMixin):
             raise ValueError('Only binary classification is supported.')
 
         if pos_label not in self.classes_:
-            raise ValueError('pos_label={} is not in the set of labels. The '
-                    'valid values are:\n{}'.format(pos_label, self.classes_))
+            raise ValueError(
+                f'pos_label={pos_label} is not in the set of labels. The valid values are:\n{self.classes_}'
+            )
 
         if priv_group not in self.groups_:
-            raise ValueError('priv_group={} is not in the set of groups. The '
-                    'valid values are:\n{}'.format(priv_group, self.groups_))
+            raise ValueError(
+                f'priv_group={priv_group} is not in the set of groups. The valid values are:\n{self.groups_}'
+            )
 
         if not 0.0 <= self.threshold <= 1.0:
-            raise ValueError('threshold must be between 0.0 and 1.0, '
-                             'threshold={}'.format(self.threshold))
+            raise ValueError(
+                f'threshold must be between 0.0 and 1.0, threshold={self.threshold}'
+            )
 
         if not 0.0 <= self.margin <= min(self.threshold, 1 - self.threshold):
-            raise ValueError('margin must be between 0.0 and {}, margin={}'
-                             ''.format(min(self.threshold, 1 - self.threshold),
-                                       self.margin))
+            raise ValueError(
+                f'margin must be between 0.0 and {min(self.threshold, 1 - self.threshold)}, margin={self.margin}'
+            )
 
         return self
 
@@ -166,8 +169,9 @@ class RejectOptionClassifier(BaseEstimator, ClassifierMixin):
 
         groups, _ = check_groups(X, self.prot_attr_)
         if len(self.classes_) != X.shape[1]:
-            raise ValueError('X should contain one column per class. Got: {} '
-                             'columns.'.format(X.shape[1]))
+            raise ValueError(
+                f'X should contain one column per class. Got: {X.shape[1]} columns.'
+            )
 
         pos_idx = np.nonzero(self.classes_ == self.pos_label_)[0][0]
         yt = X.iloc[:, pos_idx].to_numpy().copy()
@@ -331,9 +335,9 @@ class RejectOptionClassifierCV(GridSearchCV):
                 self.scorer_ = make_scorer(disparate_impact_ratio, is_ratio=True,
                         prot_attr=self.prot_attr, zero_division=0)
             elif not callable(self.scoring):
-                raise ValueError("scorer must be one of: 'statistical_parity', "
-                    "'average_odds', 'equal_opportunity', 'disparate_impact' "
-                    "or a callable function. Got:\n{}".format(self.scoring))
+                raise ValueError(
+                    f"scorer must be one of: 'statistical_parity', 'average_odds', 'equal_opportunity', 'disparate_impact' or a callable function. Got:\n{self.scoring}"
+                )
             else:
                 self.scorer_name_ = 'fairness_metric'
                 self.scorer_ = self.scoring
@@ -346,8 +350,10 @@ class RejectOptionClassifierCV(GridSearchCV):
                 self.refit = lambda res: np.ma.array(res['mean_test_bal_acc'],
                     mask=res['mean_test_disparate_impact'] < 0.8).argmax()
             else:
-                self.refit = lambda res: np.ma.array(res['mean_test_bal_acc'],
-                    mask=res['mean_test_'+self.scorer_name_] < -0.1).argmax()
+                self.refit = lambda res: np.ma.array(
+                    res['mean_test_bal_acc'],
+                    mask=res[f'mean_test_{self.scorer_name_}'] < -0.1,
+                ).argmax()
 
         class NoSplit:
             def split(self, X, y=None, groups=None):

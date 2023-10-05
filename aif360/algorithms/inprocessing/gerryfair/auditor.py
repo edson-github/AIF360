@@ -73,8 +73,8 @@ class Auditor:
         self.fairness_def = fairness_def
         if self.fairness_def not in ['FP', 'FN']:
             raise Exception(
-                'Invalid fairness metric specified: {}. Please choose \'FP\' or \'FN\'.'
-                .format(self.fairness_def))
+                f"Invalid fairness metric specified: {self.fairness_def}. Please choose \'FP\' or \'FN\'."
+            )
         self.y = self.y_input
         # flip the labels for FN rate auditing
         if self.fairness_def == 'FN':
@@ -145,28 +145,27 @@ class Auditor:
         m = self.X_prime_0.shape[0]
         g_weight = np.sum(g_members) * (1.0 / float(m))
         for i in range(n):
-            X_prime_0_index = 0
             if self.y[i] == 0:
+                X_prime_0_index = 0
                 new_group_cost = (1.0 / n) * pos_neg * C * (
                     1.0 / iteration) * (g_weight - g_members[X_prime_0_index])
                 if np.abs(group.weighted_disparity) < gamma:
                     new_group_cost = 0
 
-                if self.fairness_def == 'FP':
-                    c_1[i] = (c_1[i] - 1.0 / n) * (
-                        (iteration - 1.0) /
-                        iteration) + new_group_cost + 1.0 / n
-                elif self.fairness_def == 'FN':
+                if self.fairness_def == 'FN':
                     c_0[i] = (c_0[i] - 1.0 / n) * (
                         (iteration - 1.0) /
                         iteration) + new_group_cost + 1.0 / n
 
+                elif self.fairness_def == 'FP':
+                    c_1[i] = (c_1[i] - 1.0 / n) * (
+                        (iteration - 1.0) /
+                        iteration) + new_group_cost + 1.0 / n
                 X_prime_0_index += 1
-            else:
-                if self.fairness_def == 'FP':
-                    c_1[i] = -1.0 / n
-                elif self.fairness_def == 'FN':
-                    c_0[i] = -1.0 / n
+            elif self.fairness_def == 'FN':
+                c_0[i] = -1.0 / n
+            elif self.fairness_def == 'FP':
+                c_1[i] = -1.0 / n
         return tuple(c_0), tuple(c_1)
 
     def get_subset(self, predictions):

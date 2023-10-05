@@ -43,8 +43,9 @@ class MulticlassLabelDataset(StructuredDataset):
         # =========================== SHAPE CHECKING ===========================
         # Verify if the labels are only 1 column
         if self.labels.shape[1] != 1:
-            raise ValueError("MulticlassLabelDataset only supports single-column "
-                "labels:\n\tlabels.shape = {}".format(self.labels.shape))
+            raise ValueError(
+                f"MulticlassLabelDataset only supports single-column labels:\n\tlabels.shape = {self.labels.shape}"
+            )
 
         # =========================== VALUE CHECKING ===========================
         # Check if the favorable and unfavorable labels match those in the dataset

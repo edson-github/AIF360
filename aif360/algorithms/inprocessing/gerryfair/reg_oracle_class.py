@@ -21,8 +21,7 @@ class RegOracle:
         """Predict labels on data set X."""
         c_0 = self.b0.predict(X)
         c_1 = self.b1.predict(X)
-        y = (c_1 < c_0).astype('int')
-        return y
+        return (c_1 < c_0).astype('int')
 
 
 class RandomLinearThresh:

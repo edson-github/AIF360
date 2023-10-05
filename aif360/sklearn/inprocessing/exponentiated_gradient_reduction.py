@@ -4,12 +4,14 @@ fairlearn.reductions.ExponentiatedGradient
 available in the https://github.com/fairlearn/fairlearn library
 licensed under the MIT Licencse, Copyright Microsoft Corporation
 """
+
 try:
     import fairlearn.reductions as red
 except ImportError as error:
     from logging import warning
-    warning("{}: ExponentiatedGradientReduction will be unavailable. To install, run:\n"
-            "pip install 'aif360[Reductions]'".format(error))
+    warning(
+        f"{error}: ExponentiatedGradientReduction will be unavailable. To install, run:\npip install 'aif360[Reductions]'"
+    )
 from sklearn.base import BaseEstimator, ClassifierMixin, clone
 from sklearn.preprocessing import LabelEncoder
 
@@ -92,14 +94,14 @@ class ExponentiatedGradientReduction(BaseEstimator, ClassifierMixin):
         """
         self.estimator_ = clone(self.estimator)
 
-        moments = {
-            "DemographicParity": red.DemographicParity,
-            "EqualizedOdds": red.EqualizedOdds,
-            "TruePositiveRateParity": red.TruePositiveRateParity,
-            "FalsePositiveRateParity": red.FalsePositiveRateParity,
-            "ErrorRateParity": red.ErrorRateParity,
-        }
         if isinstance(self.constraints, str):
+            moments = {
+                "DemographicParity": red.DemographicParity,
+                "EqualizedOdds": red.EqualizedOdds,
+                "TruePositiveRateParity": red.TruePositiveRateParity,
+                "FalsePositiveRateParity": red.FalsePositiveRateParity,
+                "ErrorRateParity": red.ErrorRateParity,
+            }
             if self.constraints not in moments:
                 raise ValueError(f"Constraint not recognized: {self.constraints}")
             self.moment_ = moments[self.constraints]()

@@ -86,10 +86,14 @@ class StandardDataset(BinaryLabelDataset):
 
         # 3. Drop unrequested columns
         features_to_keep = features_to_keep or df.columns.tolist()
-        keep = (set(features_to_keep) | set(protected_attribute_names)
-              | set(categorical_features) | set([label_name]))
+        keep = (
+            set(features_to_keep)
+            | set(protected_attribute_names)
+            | set(categorical_features)
+            | {label_name}
+        )
         if instance_weights_name:
-            keep |= set([instance_weights_name])
+            keep |= {instance_weights_name}
         df = df[sorted(keep - set(features_to_drop), key=df.columns.get_loc)]
         categorical_features = sorted(set(categorical_features) - set(features_to_drop), key=df.columns.get_loc)
 
@@ -97,8 +101,7 @@ class StandardDataset(BinaryLabelDataset):
         dropped = df.dropna()
         count = df.shape[0] - dropped.shape[0]
         if count > 0:
-            warning("Missing Data: {} rows removed from {}.".format(count,
-                    type(self).__name__))
+            warning(f"Missing Data: {count} rows removed from {type(self).__name__}.")
         df = dropped
 
         # 5. Create a one-hot encoding of the categorical variables.

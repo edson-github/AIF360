@@ -37,12 +37,15 @@ class BinaryLabelDataset(StructuredDataset):
         # =========================== SHAPE CHECKING ===========================
         # Verify if the labels are only 1 column
         if self.labels.shape[1] != 1:
-            raise ValueError("BinaryLabelDataset only supports single-column "
-                "labels:\n\tlabels.shape = {}".format(self.labels.shape))
+            raise ValueError(
+                f"BinaryLabelDataset only supports single-column labels:\n\tlabels.shape = {self.labels.shape}"
+            )
 
         # =========================== VALUE CHECKING ===========================
         # Check if the favorable and unfavorable labels match those in the dataset
-        if (not set(self.labels.ravel()) <=
-                set([self.favorable_label, self.unfavorable_label])):
+        if not set(self.labels.ravel()) <= {
+            self.favorable_label,
+            self.unfavorable_label,
+        }:
             raise ValueError("The favorable and unfavorable labels provided do "
                              "not match the labels in the dataset.")

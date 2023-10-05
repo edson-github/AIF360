@@ -21,19 +21,16 @@ def bisection_q_mle(score_function: ScoringFunction, observed_sum: float, probs:
         q_temp_mid = (q_temp_min + q_temp_max) / 2
 
         if np.sign(score_function.q_dscore(observed_sum, probs, q_temp_mid)) > 0:
-            q_temp_min = q_temp_min + (q_temp_max - q_temp_min) / 2
+            q_temp_min += (q_temp_max - q_temp_min) / 2
         else:
-            q_temp_max = q_temp_max - (q_temp_max - q_temp_min) / 2
+            q_temp_max -= (q_temp_max - q_temp_min) / 2
 
     q = (q_temp_min + q_temp_max) / 2
-    
-    direction = None
-    if 'direction' in kwargs:
-        direction = kwargs['direction']
-        
+
+    direction = kwargs.get('direction', None)
     if ((direction == 'positive') & (q < 1)) | ((direction == 'negative') & (q > 1)):
         return 1
-        
+
     return q
 
 def bisection_q_min(score_function: ScoringFunction, observed_sum: float, probs: np.array, penalty: float, q_mle: float, temp_min = 1e-3, **kwargs):
@@ -55,7 +52,7 @@ def bisection_q_min(score_function: ScoringFunction, observed_sum: float, probs:
         q_temp_mid = (q_temp_min + q_temp_max) / 2
 
         if np.sign(score_function.score(observed_sum, probs, penalty, q_temp_mid)) > 0:
-            q_temp_max = q_temp_max - (q_temp_max - q_temp_min) / 2
+            q_temp_max -= (q_temp_max - q_temp_min) / 2
         else:
             q_temp_min = q_temp_min + (q_temp_max - q_temp_min) / 2
 
@@ -80,7 +77,7 @@ def bisection_q_max(score_function: ScoringFunction, observed_sum: float, probs:
         q_temp_mid = (q_temp_min + q_temp_max) / 2
 
         if np.sign(score_function.score(observed_sum, probs, penalty, q_temp_mid)) > 0:
-            q_temp_min = q_temp_min + (q_temp_max - q_temp_min) / 2
+            q_temp_min += (q_temp_max - q_temp_min) / 2
         else:
             q_temp_max = q_temp_max - (q_temp_max - q_temp_min) / 2
 
@@ -96,10 +93,9 @@ def direction_assertions(direction: str, q_min: float, q_max: float):
             exist = 0
         elif q_min < 1:
             q_min = 1
-    else:
-        if q_min > 1:
-            exist = 0
-        elif q_max > 1:
-            q_max = 1
+    elif q_min > 1:
+        exist = 0
+    elif q_max > 1:
+        q_max = 1
 
     return exist, q_min, q_max

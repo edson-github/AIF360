@@ -87,11 +87,13 @@ class PostProcessingMeta(BaseEstimator, MetaEstimatorMixin):
         try:
             use_proba = self.postprocessor._get_tags()['requires_proba']
         except KeyError:
-            raise TypeError("`postprocessor` (type: {}) does not have a "
-                            "'requires_proba' tag.".format(type(self.estimator)))
+            raise TypeError(
+                f"`postprocessor` (type: {type(self.estimator)}) does not have a 'requires_proba' tag."
+            )
         if use_proba and not hasattr(self.estimator, 'predict_proba'):
-            raise TypeError("`estimator` (type: {}) does not implement method "
-                            "`predict_proba()`.".format(type(self.estimator)))
+            raise TypeError(
+                f"`estimator` (type: {type(self.estimator)}) does not implement method `predict_proba()`."
+            )
 
         if self.prefit:
             if len(self.options):

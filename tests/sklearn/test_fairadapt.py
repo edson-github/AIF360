@@ -9,8 +9,8 @@ from aif360.sklearn.preprocessing import fairadapt
 
 X, y, sample_weight = fetch_adult(dropcols=['education', 'capital-gain',
                                             'capital-loss', 'relationship'])
-X = X[0:5000]
-y = y[0:5000]
+X = X[:5000]
+y = y[:5000]
 (X_train, X_test,
  y_train, y_test) = train_test_split(X, y, train_size=0.8, random_state=1234567)
 

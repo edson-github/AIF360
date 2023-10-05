@@ -42,10 +42,7 @@ class StatisticalRate(General):
         c_2 = prob_z_1 / z_1
 
         t = c_0 + c_1*l_1 + c_2*l_2
-        if return_cs:
-            return t, c_1, c_2
-        else:
-            return t
+        return (t, c_1, c_2) if return_cs else t
 
     def getFuncValue(self, dist, a, b, params, samples, z_prior):
         l_1, l_2 = params
@@ -70,6 +67,4 @@ class StatisticalRate(General):
     def gamma(self, y_true, y_pred, sens):
         pos_0 = np.mean(y_pred[sens == 0] == 1)
         pos_1 = np.mean(y_pred[sens == 1] == 1)
-        if pos_0 == 0 or pos_1 == 0:
-            return 0
-        return min(pos_0/pos_1, pos_1/pos_0)
+        return 0 if pos_0 == 0 or pos_1 == 0 else min(pos_0/pos_1, pos_1/pos_0)

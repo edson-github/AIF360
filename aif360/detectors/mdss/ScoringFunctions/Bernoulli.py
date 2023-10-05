@@ -33,8 +33,11 @@ class Bernoulli(ScoringFunction):
             % (observed_sum, len(expectations), penalty, q)
         )
 
-        ans = observed_sum * np.log(q) - np.log(1 - expectations + q * expectations).sum() - penalty
-        return ans
+        return (
+            observed_sum * np.log(q)
+            - np.log(1 - expectations + q * expectations).sum()
+            - penalty
+        )
 
     def qmle(self, observed_sum: float, expectations: np.array):
         """
@@ -43,9 +46,10 @@ class Bernoulli(ScoringFunction):
         :param observed_sum: sum of observed binary outcomes for all i
         :param expectations: predicted outcomes for each data element i
         """
-        direction = self.direction        
-        ans = optim.bisection_q_mle(self, observed_sum, expectations, direction=direction)
-        return ans
+        direction = self.direction
+        return optim.bisection_q_mle(
+            self, observed_sum, expectations, direction=direction
+        )
 
     def compute_qs(self, observed_sum: float, expectations: np.array, penalty: float):
         """
@@ -72,8 +76,7 @@ class Bernoulli(ScoringFunction):
         if exist:
             exist, q_min, q_max = optim.direction_assertions(direction, q_min, q_max)
 
-        ans = [exist, q_mle, q_min, q_max]
-        return ans
+        return [exist, q_mle, q_min, q_max]
 
     def q_dscore(self, observed_sum:float, expectations:np.array, q:float):
         """
@@ -87,5 +90,7 @@ class Bernoulli(ScoringFunction):
         :param q: current value of q
         :return: q dscore/dq
         """
-        ans = observed_sum - (q * expectations / (1 - expectations + q * expectations)).sum()
-        return ans
+        return (
+            observed_sum
+            - (q * expectations / (1 - expectations + q * expectations)).sum()
+        )

@@ -41,7 +41,7 @@ class BankDataset(StandardDataset):
         try:
             df = pd.read_csv(filepath, sep=';', na_values=na_values)
         except IOError as err:
-            print("IOError: {}".format(err))
+            print(f"IOError: {err}")
             print("To use this class, please download the following file:")
             print("\n\thttps://archive.ics.uci.edu/ml/machine-learning-databases/00222/bank-additional.zip")
             print("\nunzip it and place the files, as-is, in the folder:")

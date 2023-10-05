@@ -4,8 +4,9 @@ try:
     import tensorflow.compat.v1 as tf
 except ImportError as error:
     from logging import warning
-    warning("{}: AdversarialDebiasing will be unavailable. To install, run:\n"
-            "pip install 'aif360[AdversarialDebiasing]'".format(error))
+    warning(
+        f"{error}: AdversarialDebiasing will be unavailable. To install, run:\npip install 'aif360[AdversarialDebiasing]'"
+    )
 
 from aif360.algorithms import Transformer
 
@@ -244,8 +245,7 @@ class AdversarialDebiasing(Transformer):
         while samples_covered < num_test_samples:
             start = samples_covered
             end = samples_covered + self.batch_size
-            if end > num_test_samples:
-                end = num_test_samples
+            end = min(end, num_test_samples)
             batch_ids = np.arange(start, end)
             batch_features = dataset.features[batch_ids]
             batch_labels = np.reshape(dataset.labels[batch_ids], [-1,1])

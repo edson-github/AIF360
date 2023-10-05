@@ -20,11 +20,19 @@ def notebook_run(path):
     kername = "python3"
 
     with tempfile.NamedTemporaryFile(suffix=".ipynb") as fout:
-        args = ["jupyter", "nbconvert", "--to", "notebook", "--execute",
-                "--ExecutePreprocessor.timeout=600",
-                "--ExecutePreprocessor.allow_errors=True",
-                "--ExecutePreprocessor.kernel_name={}".format(kername),
-                "--output", fout.name, path]
+        args = [
+            "jupyter",
+            "nbconvert",
+            "--to",
+            "notebook",
+            "--execute",
+            "--ExecutePreprocessor.timeout=600",
+            "--ExecutePreprocessor.allow_errors=True",
+            f"--ExecutePreprocessor.kernel_name={kername}",
+            "--output",
+            fout.name,
+            path,
+        ]
 
         subprocess.check_call(args)
 
@@ -34,7 +42,7 @@ def notebook_run(path):
     errors = [output for cell in nb.cells if "outputs" in cell
                      for output in cell["outputs"]
                      if output.output_type == "error"]
-    
+
     os.chdir(old_cwd)
 
     return nb, errors

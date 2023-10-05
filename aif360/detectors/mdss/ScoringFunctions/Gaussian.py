@@ -59,12 +59,8 @@ class Gaussian(ScoringFunction):
         expected_sum = expectations.sum()
 
         # Deals with case where observed_sum = expected_sum = 0
-        if observed_sum == expected_sum:
-            ans = 1
-        else:
-            ans = observed_sum / expected_sum
-        
-        assert np.isnan(ans) == False, f'{expected_sum}, {observed_sum}, {ans}' 
+        ans = 1 if observed_sum == expected_sum else observed_sum / expected_sum
+        assert np.isnan(ans) == False, f'{expected_sum}, {observed_sum}, {ans}'
         return ans
 
     def compute_qs(self, observed_sum: float, expectations: np.array, penalty: float):
@@ -95,5 +91,4 @@ class Gaussian(ScoringFunction):
         if exist:
             exist, q_min, q_max = optim.direction_assertions(direction, q_min, q_max)
 
-        ans = [exist, q_mle, q_min, q_max]
-        return ans
+        return [exist, q_mle, q_min, q_max]

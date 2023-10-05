@@ -77,7 +77,7 @@ class MDSSClassificationMetric(ClassificationMetric):
 
         for g in groups:
             for k, v in g.items():
-                if k in subset.keys():
+                if k in subset:
                     subset[k].append(v)
                 else:
                     subset[k] = [v]

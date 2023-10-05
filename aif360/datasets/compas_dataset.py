@@ -67,7 +67,7 @@ class CompasDataset(StandardDataset):
         try:
             df = pd.read_csv(filepath, index_col='id', na_values=na_values)
         except IOError as err:
-            print("IOError: {}".format(err))
+            print(f"IOError: {err}")
             print("To use this class, please download the following file:")
             print("\n\thttps://raw.githubusercontent.com/propublica/compas-analysis/master/compas-scores-two-years.csv")
             print("\nand place it, as-is, in the folder:")

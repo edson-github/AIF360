@@ -62,10 +62,10 @@ def clean_dataset(dataset, attributes, centered):
 
     ## Get and remove label Y
     y_col = [str(c) for c in sens_df.columns if sens_df[c][0] == 2]
-    print('label feature: {}'.format(y_col))
+    print(f'label feature: {y_col}')
     if (len(y_col) > 1):
         raise ValueError('More than 1 label column used')
-    if (len(y_col) < 1):
+    if not y_col:
         raise ValueError('No label column used')
 
     y = df[y_col[0]]
@@ -75,13 +75,13 @@ def clean_dataset(dataset, attributes, centered):
     X = X.loc[:, X.columns != 'Unnamed: 0']
     ## Create X_prime, by getting protected attributes
     sens_cols = [str(c) for c in sens_df.columns if sens_df[c][0] == 1]
-    print('sensitive features: {}'.format(sens_cols))
+    print(f'sensitive features: {sens_cols}')
     sens_dict = {c: 1 if c in sens_cols else 0 for c in df.columns}
     X, sens_dict = one_hot_code(X, sens_dict)
     sens_names = [key for key in sens_dict.keys() if sens_dict[key] == 1]
     print(
-        'there are {} sensitive features including derivative features'.format(
-            len(sens_names)))
+        f'there are {len(sens_names)} sensitive features including derivative features'
+    )
     X_prime = X[sens_names]
     if centered:
         X = center(X)
@@ -97,7 +97,7 @@ def center(X):
 
 def array_to_tuple(x):
     # have to cast ndarray to hashable type in get_baseline()
-    x = tuple([el[0] for el in x]) if x.__class__.__name__ == 'ndarray' else x
+    x = tuple(el[0] for el in x) if x.__class__.__name__ == 'ndarray' else x
     return x
 
 
@@ -111,7 +111,7 @@ def one_hot_code(df1, sens_dict):
             n = len(unique_values)
             if n > 2:
                 for i in range(n):
-                    col_name = '{}.{}'.format(c, i)
+                    col_name = f'{c}.{i}'
                     col_i = [
                         1 if el == unique_values[i] else 0 for el in column
                     ]

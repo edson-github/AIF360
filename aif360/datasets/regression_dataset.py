@@ -66,8 +66,7 @@ class RegressionDataset(StructuredDataset):
         dropped = df.dropna()
         count = df.shape[0] - dropped.shape[0]
         if count > 0:
-            warning("Missing Data: {} rows removed from {}.".format(count,
-                    type(self).__name__))
+            warning(f"Missing Data: {count} rows removed from {type(self).__name__}.")
         df = dropped
 
         # 4. Create a one-hot encoding of the categorical variables.

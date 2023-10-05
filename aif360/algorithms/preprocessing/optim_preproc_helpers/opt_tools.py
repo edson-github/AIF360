@@ -89,16 +89,11 @@ class OptTools():
         if not isinstance(df, pd.DataFrame):
             raise TypeError("`df` must be a pandas DataFrame")
 
-        if not features:
-            self.features = list(df)
-        else:
-            self.features = features
-
+        self.features = list(df) if not features else features
         # build joint distribution
         self.dfJoint = self.df.groupby(self.features).size().reset_index()
         self.dfJoint.rename(columns={0: 'Count'}, inplace=True)
-        self.dfJoint['Frequency'] = self.dfJoint['Count'].apply(
-            lambda x: x/float(len(self.df)))
+        self.dfJoint['Frequency'] = self.dfJoint['Count'] / float(len(self.df))
 
         # initialize the features that will be used for optimization
         self.D_features = []    # discriminatory features
@@ -195,15 +190,11 @@ class OptTools():
         self.dfPxyd = pd.DataFrame(index=self.dfP.index, columns=['Frequency'])
         index_list = [list(x) for x in self.dfPxyd.index.tolist()]
 
-        # find corresponding frequency value
-        i = 0
-        for comb in self.dfJoint[self.DXY_features].values.tolist():
+        for i, comb in enumerate(self.dfJoint[self.DXY_features].values.tolist()):
             # get the entry corresponding to the combination
             idx = index_list.index(comb)
             # add marginal to list
             self.dfPxyd.iloc[idx, 0] = self.dfJoint.loc[i, 'Frequency']
-            i += 1
-
         # create mask that reduces Pxyd to Pxy
         # so Pxyd.dot(dfMask1) = Pxy
         self.dfMask_Pxyd_to_Pxy = pd.DataFrame(np.zeros((len(self.dfP),
@@ -356,11 +347,10 @@ class OptTools():
             self.dfMask_Pxyd_to_Pxy.values.T).dot(
             np.diag(PxydMarginal+1e-10)) * Pmap
 
-        for i in range(len(self.CMlist)):
-            constraints.append(
-                cp.sum(cp.multiply(self.CMlist[i], Pxy_xhyh), axis=1) <=
-                self.dlist[i])
-
+        constraints.extend(
+            cp.sum(cp.multiply(self.CMlist[i], Pxy_xhyh), axis=1) <= self.dlist[i]
+            for i in range(len(self.CMlist))
+        )
         # 4. Discrimination control
         for d in range(self.dfMask_Pxyd_to_Pd.shape[1]):
             for d2 in range(self.dfMask_Pxyd_to_Pd.shape[1]):
@@ -391,10 +381,10 @@ class OptTools():
         self.optimum = prob.value
         self.const = []
 
-        for i in range(len(self.CMlist)):
-            self.const.append(
-                cp.sum(cp.multiply(self.CMlist[i], Pxy_xhyh),
-                            axis=1).value.max())
+        self.const.extend(
+            cp.sum(cp.multiply(self.CMlist[i], Pxy_xhyh), axis=1).value.max()
+            for i in range(len(self.CMlist))
+        )
 
     def compute_marginals(self):
         """Compute a bunch of required marginal distributions."""

@@ -10,7 +10,7 @@ def load_preproc_data_adult(protected_attributes=None, sub_samp=False, balance=F
         """
 
         # Group age by decade
-        df['Age (decade)'] = df['age'].apply(lambda x: x//10*10)
+        df['Age (decade)'] = df['age'] // 10 * 10
         # df['Age (decade)'] = df['age'].apply(lambda x: np.floor(x/10.0)*10.0)
 
         def group_edu(x):
@@ -22,16 +22,10 @@ def load_preproc_data_adult(protected_attributes=None, sub_samp=False, balance=F
                 return x
 
         def age_cut(x):
-            if x >= 70:
-                return '>=70'
-            else:
-                return x
+            return '>=70' if x >= 70 else x
 
         def group_race(x):
-            if x == "White":
-                return 1.0
-            else:
-                return 0.0
+            return 1.0 if x == "White" else 0.0
 
         # Cluster education and age attributes.
         # Limit education range
@@ -129,30 +123,18 @@ def load_preproc_data_compas(protected_attributes=None):
         def quantizeLOS(x):
             if x<= 7:
                 return '<week'
-            if 8<x<=93:
-                return '<3months'
-            else:
-                return '>3 months'
+            return '<3months' if 8<x<=93 else '>3 months'
 
         # Quantize length of stay
         def adjustAge(x):
-            if x == '25 - 45':
-                return '25 to 45'
-            else:
-                return x
+            return '25 to 45' if x == '25 - 45' else x
 
         # Quantize score_text to MediumHigh
         def quantizeScore(x):
-            if (x == 'High')| (x == 'Medium'):
-                return 'MediumHigh'
-            else:
-                return x
+            return 'MediumHigh' if (x == 'High')| (x == 'Medium') else x
 
         def group_race(x):
-            if x == "Caucasian":
-                return 1.0
-            else:
-                return 0.0
+            return 1.0 if x == "Caucasian" else 0.0
 
         dfcutQ['priors_count'] = dfcutQ['priors_count'].apply(lambda x: quantizePrior(x))
         dfcutQ['length_of_stay'] = dfcutQ['length_of_stay'].apply(lambda x: quantizeLOS(x))

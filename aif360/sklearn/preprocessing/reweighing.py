@@ -139,8 +139,9 @@ class ReweighingMeta(BaseEstimator, MetaEstimatorMixin):
             self
         """
         if not has_fit_parameter(self.estimator, 'sample_weight'):
-            raise TypeError("`estimator` (type: {}) does not have fit parameter"
-                            " `sample_weight`.".format(type(self.estimator)))
+            raise TypeError(
+                f"`estimator` (type: {type(self.estimator)}) does not have fit parameter `sample_weight`."
+            )
 
         if self.reweigher is None:
             self.reweigher_ = Reweighing()

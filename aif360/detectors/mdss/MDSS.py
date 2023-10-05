@@ -194,11 +194,7 @@ class MDSS(object):
         # compute the MLE value of q, making sure to only consider the desired direction (positive or negative)
         current_q_mle = scoring_function.qmle(observed_sum, expectations)
 
-        # total_penalty = penalty * sum of list lengths in current_subset
-        total_penalty = 0
-        for key, values in current_subset.items():
-            total_penalty += len(values)
-
+        total_penalty = sum(len(values) for values in current_subset.values())
         total_penalty *= penalty
 
         # Compute and return the penalized score    
@@ -225,8 +221,9 @@ class MDSS(object):
         expectations = expectations.reset_index(drop = True)
         outcomes = outcomes.reset_index(drop = True)
 
-        assert len(coordinates) == len(expectations) == len(outcomes), \
-            f'Lengths of coordinates, expectations, and outcomes should be equal.'
+        assert (
+            len(coordinates) == len(expectations) == len(outcomes)
+        ), 'Lengths of coordinates, expectations, and outcomes should be equal.'
 
         # Check that the appropriate scoring function is used
 
@@ -244,7 +241,7 @@ class MDSS(object):
             # Bin the continuous outcomes column for Berk Jones in continuous mode
             alpha = self.scoring_function.alpha
             direction = self.scoring_function.direction
-            
+
             if mode == "continuous":
                 quantile = outcomes.quantile(alpha)
                 outcomes = (outcomes > quantile).apply(int)
@@ -263,7 +260,7 @@ class MDSS(object):
 
              # Set variance for Gaussian
             self.scoring_function.var = expectations.var()
-            
+
             # Move entire distribution to the positive axis
             shift = np.abs(expectations.min()) + np.abs(outcomes.min())
             outcomes = outcomes + shift
@@ -287,7 +284,7 @@ class MDSS(object):
             # Starting subset. Note that we start with all values for the first iteration
             # and random values for succeeding iterations.
             current_subset = get_entire_subset() if (i == 0) \
-                else get_random_subset(coordinates, np.random.rand(1).item(), 10)
+                    else get_random_subset(coordinates, np.random.rand(1).item(), 10)
 
             # score the entire population
             current_score = self.score_current_subset(
@@ -358,7 +355,7 @@ class MDSS(object):
                         current_score,
                         temp_score,
                     )
-                    
+
                 flags[attribute_number_to_scan] = 1
                 current_subset = temp_subset
                 current_score = temp_score

@@ -82,8 +82,8 @@ class GerryFairClassifier(Transformer):
         self.fairness_violations = None
         if self.fairness_def not in ['FP', 'FN']:
             raise Exception(
-                'This metric is not yet supported for learning. Metric specified: {}.'
-                .format(self.fairness_def))
+                f'This metric is not yet supported for learning. Metric specified: {self.fairness_def}.'
+            )
 
     def fit(self, dataset, early_termination=True):
         """Run Fictitious play to compute the approximately fair classifier.
@@ -171,15 +171,12 @@ class GerryFairClassifier(Transformer):
         y_hat = None
         for hyp in self.classifiers:
             new_predictions = hyp.predict(data)/num_classifiers
-            if y_hat is None:
-                y_hat = new_predictions
-            else:
-                y_hat = np.add(y_hat, new_predictions)
+            y_hat = new_predictions if y_hat is None else np.add(y_hat, new_predictions)
         if threshold:
             dataset_new.labels = np.asarray(
                 [1 if y >= threshold else 0 for y in y_hat])
         else:
-            dataset_new.labels = np.asarray([y for y in y_hat])
+            dataset_new.labels = np.asarray(list(y_hat))
         # ensure ndarray is formatted correctly
         dataset_new.labels.resize(dataset.labels.shape, refcheck=True)
         return dataset_new
@@ -195,9 +192,8 @@ class GerryFairClassifier(Transformer):
 
         if self.printflag:
             print(
-                'iteration: {}, error: {}, fairness violation: {}, violated group size: {}'
-                .format(int(iteration), error, group.weighted_disparity,
-                        group.group_size))
+                f'iteration: {int(iteration)}, error: {error}, fairness violation: {group.weighted_disparity}, violated group size: {group.group_size}'
+            )
 
     def save_heatmap(self, iteration, dataset, predictions, vmin, vmax):
         """Helper Function to save the heatmap.
@@ -221,9 +217,15 @@ class GerryFairClassifier(Transformer):
             X_prime_heat = X_prime.iloc[:, 0:2]
             eta = 0.1
             minmax = heatmap.heat_map(
-                X, X_prime_heat, y, predictions, eta,
-                self.heatmap_path + '/heatmap_iteration_{}'.format(iteration),
-                vmin, vmax)
+                X,
+                X_prime_heat,
+                y,
+                predictions,
+                eta,
+                f'{self.heatmap_path}/heatmap_iteration_{iteration}',
+                vmin,
+                vmax,
+            )
             if iteration == 1:
                 vmin = minmax[0]
                 vmax = minmax[1]

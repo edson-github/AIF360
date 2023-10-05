@@ -75,10 +75,10 @@ def _evaluate(
     if prot_attr is None:
         initial_distribution, required_distribution, matrix_distance = _transform(ground_truth, classifier, cost_matrix)
         return ot.emd2(a=initial_distribution, b=required_distribution, M=matrix_distance, numItermax=num_iters)
-    
-    if not ground_truth.nunique() == 2:
+
+    if ground_truth.nunique() != 2:
         raise ValueError(f"Expected to have exactly 2 target values, got {ground_truth.nunique()}.")
-    
+
     # Calculate EMD between ground truth distribution and distribution of each group
     emds = {}
     for sa_val in sorted(prot_attr.unique()):
@@ -137,28 +137,32 @@ def ot_distance(
     # Assert correct mode passed
     if mode not in ['binary', 'continuous', 'nominal', 'ordinal']:
         raise ValueError(f"Expected one of {['binary', 'continuous', 'nominal', 'ordinal']}, got {mode}.")
-    
+
     # Assert correct types passed to ground_truth, classifier and prot_attr
     if not isinstance(ground_truth, (pd.Series, str)):
         raise TypeError(f"ground_truth: expected pd.Series or str, got {type(ground_truth)}")
     if classifier is not None:
-        if mode in ["binary", "continuous"] and not isinstance(classifier, pd.Series):
+        if mode in {"binary", "continuous"} and not isinstance(
+            classifier, pd.Series
+        ):
             raise TypeError(f"classifier: expected pd.Series for {mode} mode, got {type(classifier)}")
-        if mode in ["nominal", "ordinal"] and not isinstance(classifier, pd.DataFrame):
+        if mode in {"nominal", "ordinal"} and not isinstance(
+            classifier, pd.DataFrame
+        ):
             raise TypeError(f"classifier: expected pd.DataFrame for {mode} mode, got {type(classifier)}")
     if prot_attr is not None and not isinstance(prot_attr, (pd.Series, str)):
         raise TypeError(f"prot_attr: expected pd.Series or str, got {type(prot_attr)}")
-    
+
     # Assert correct type passed to cost_matrix
     if cost_matrix is not None and not isinstance(cost_matrix, np.ndarray):
         raise TypeError(f"cost_matrix: expected numpy.ndarray, got {type(cost_matrix)}")
-    
+
     # Assert scoring is "Wasserstein1"
     if not scoring == "Wasserstein1":
         raise ValueError(f"Scoring mode can only be \"Wasserstein1\", got {scoring}")
-    
+
     grt = ground_truth.copy()
- 
+
     if classifier is not None:
         cls = classifier.copy()
         if prot_attr is not None:
@@ -171,7 +175,7 @@ def ot_distance(
         sat.index = grt.index
     else:
         sat = None
-    
+
     uniques = list(grt.unique())
     if mode == "binary":
         if len(uniques) > 2:
@@ -190,7 +194,7 @@ def ot_distance(
     elif favorable_value == 'low':
         favorable_value = min_val
     elif favorable_value is None:
-        if mode in ["binary", "ordinal", "continuous"]:
+        if mode in {"binary", "ordinal", "continuous"}:
             favorable_value = max_val # Default to higher is better
         elif mode == "nominal":
             favorable_value = "flag-all" # Default to scan through all categories
