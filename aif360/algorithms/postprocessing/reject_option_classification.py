@@ -103,19 +103,14 @@ class RejectOptionClassification(Transformer):
         class_thresh_arr = np.zeros_like(fair_metric_arr)
 
         cnt = 0
+        low_ROC_margin = 0.0
         # Iterate through class thresholds
         for class_thresh in np.linspace(self.low_class_thresh,
                                         self.high_class_thresh,
                                         self.num_class_thresh):
 
             self.classification_threshold = class_thresh
-            if class_thresh <= 0.5:
-                low_ROC_margin = 0.0
-                high_ROC_margin = class_thresh
-            else:
-                low_ROC_margin = 0.0
-                high_ROC_margin = (1.0-class_thresh)
-
+            high_ROC_margin = class_thresh if class_thresh <= 0.5 else (1.0-class_thresh)
             # Iterate through ROC margins
             for ROC_margin in np.linspace(
                                 low_ROC_margin,
@@ -141,7 +136,7 @@ class RejectOptionClassification(Transformer):
 
                 # Balanced accuracy and fairness metric computations
                 balanced_acc_arr[cnt] = 0.5*(classified_transf_metric.true_positive_rate()\
-                                       +classified_transf_metric.true_negative_rate())
+                                           +classified_transf_metric.true_negative_rate())
                 if self.metric_name == "Statistical parity difference":
                     fair_metric_arr[cnt] = dataset_transf_metric_pred.mean_difference()
                 elif self.metric_name == "Average odds difference":
@@ -216,7 +211,7 @@ class RejectOptionClassification(Transformer):
         return self.fit(dataset_true, dataset_pred).predict(dataset_pred)
 
 # Function to obtain the pareto frontier
-def _get_pareto_frontier(scores, return_mask = True):  # <- Fastest for many points
+def _get_pareto_frontier(scores, return_mask = True):    # <- Fastest for many points
     """
     :param scores: An (n_points, n_scores) array
     :param return_mask: True to return a mask, False to return integer indices of efficient points.
@@ -236,9 +231,8 @@ def _get_pareto_frontier(scores, return_mask = True):  # <- Fastest for many poi
         scores = scores[nondominated_point_mask]
         next_point_index = np.sum(nondominated_point_mask[:next_point_index])+1
 
-    if return_mask:
-        is_efficient_mask = np.zeros(n_points, dtype = bool)
-        is_efficient_mask[is_efficient] = True
-        return is_efficient_mask
-    else:
+    if not return_mask:
         return is_efficient
+    is_efficient_mask = np.zeros(n_points, dtype = bool)
+    is_efficient_mask[is_efficient] = True
+    return is_efficient_mask

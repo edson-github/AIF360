@@ -48,7 +48,7 @@ def calc_disp(predictions, X, group_labels, X_prime, group):
         predictions[i] for i, c in enumerate(group_labels)
         if group_members[i] == 1 and c == 0
     ]
-    if len(fp_g) == 0:
+    if not fp_g:
         return 0
     fp_g = np.mean(fp_g)
     return (FP - fp_g) * g_size_0
@@ -96,6 +96,6 @@ def heat_map(X, X_prime, y, predictions, eta, plot_path, vmin=None, vmax=None):
                               vmin=vmin,
                               vmax=vmax)
     if plot_path != '.':
-        fig.savefig('{}.png'.format(plot_path))
+        fig.savefig(f'{plot_path}.png')
         plt.close()
     return [np.min(disparity), np.max(disparity)]

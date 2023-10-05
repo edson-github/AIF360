@@ -95,7 +95,7 @@ class StructuredDataset(Dataset):
         try:
             df = df.astype(np.float64)
         except ValueError as e:
-            print("ValueError: {}".format(e))
+            print(f"ValueError: {e}")
             raise ValueError("DataFrame values must be numerical.")
 
         # Convert all column names to strings
@@ -227,7 +227,7 @@ class StructuredDataset(Dataset):
         for f in [self.features, self.protected_attributes, self.labels,
                   self.scores, self.instance_weights]:
             if not isinstance(f, np.ndarray):
-                raise TypeError("'{}' must be an np.ndarray.".format(f.__name__))
+                raise TypeError(f"'{f.__name__}' must be an np.ndarray.")
 
         # convert ndarrays to float64
         self.features = self.features.astype(np.float64)
@@ -241,43 +241,39 @@ class StructuredDataset(Dataset):
         try:
             self.scores.reshape(self.labels.shape)
         except ValueError as e:
-            print("ValueError: {}".format(e))
+            print(f"ValueError: {e}")
             raise ValueError("'scores' should have the same shape as 'labels'.")
-        if not self.labels.shape[0] == self.features.shape[0]:
-            raise ValueError("Number of labels must match number of instances:"
-                "\n\tlabels.shape = {}\n\tfeatures.shape = {}".format(
-                    self.labels.shape, self.features.shape))
-        if not self.instance_weights.shape[0] == self.features.shape[0]:
-            raise ValueError("Number of weights must match number of instances:"
-                "\n\tinstance_weights.shape = {}\n\tfeatures.shape = {}".format(
-                    self.instance_weights.shape, self.features.shape))
+        if self.labels.shape[0] != self.features.shape[0]:
+            raise ValueError(
+                f"Number of labels must match number of instances:\n\tlabels.shape = {self.labels.shape}\n\tfeatures.shape = {self.features.shape}"
+            )
+        if self.instance_weights.shape[0] != self.features.shape[0]:
+            raise ValueError(
+                f"Number of weights must match number of instances:\n\tinstance_weights.shape = {self.instance_weights.shape}\n\tfeatures.shape = {self.features.shape}"
+            )
 
         # =========================== VALUE CHECKING ===========================
         if np.any(np.logical_or(self.scores < 0., self.scores > 1.)):
             warning("'scores' has no well-defined meaning out of range [0, 1].")
 
         for i in range(len(self.privileged_protected_attributes)):
-            priv = set(self.privileged_protected_attributes[i])
             unpriv = set(self.unprivileged_protected_attributes[i])
+            priv = set(self.privileged_protected_attributes[i])
             # check for duplicates
             if priv & unpriv:
-                raise ValueError("'privileged_protected_attributes' and "
-                    "'unprivileged_protected_attributes' should not share any "
-                    "common elements:\n\tBoth contain {} for feature {}".format(
-                        list(priv & unpriv), self.protected_attribute_names[i]))
+                raise ValueError(
+                    f"'privileged_protected_attributes' and 'unprivileged_protected_attributes' should not share any common elements:\n\tBoth contain {list(priv & unpriv)} for feature {self.protected_attribute_names[i]}"
+                )
             # check for unclassified values
             if not set(self.protected_attributes[:, i]) <= (priv | unpriv):
-                raise ValueError("All observed values for protected attributes "
-                    "should be designated as either privileged or unprivileged:"
-                    "\n\t{} not designated for feature {}".format(
-                        list(set(self.protected_attributes[:, i])
-                           - (priv | unpriv)),
-                        self.protected_attribute_names[i]))
+                raise ValueError(
+                    f"All observed values for protected attributes should be designated as either privileged or unprivileged:\n\t{list(set(self.protected_attributes[:, i]) - (priv | unpriv))} not designated for feature {self.protected_attribute_names[i]}"
+                )
             # warn for unobserved values
             if not (priv | unpriv) <= set(self.protected_attributes[:, i]):
-                warning("{} listed but not observed for feature {}".format(
-                    list((priv | unpriv) - set(self.protected_attributes[:, i])),
-                    self.protected_attribute_names[i]))
+                warning(
+                    f"{list((priv | unpriv) - set(self.protected_attributes[:, i]))} listed but not observed for feature {self.protected_attribute_names[i]}"
+                )
 
     @contextmanager
     def temporarily_ignore(self, *fields):
@@ -490,12 +486,16 @@ class StructuredDataset(Dataset):
             fold.instance_weights = inst_wgts
             fold.instance_names = list(map(str, inst_name))
             fold.metadata = fold.metadata.copy()
-            fold.metadata.update({
-                'transformer': '{}.split'.format(type(self).__name__),
-                'params': {'num_or_size_splits': num_or_size_splits,
-                           'shuffle': shuffle},
-                'previous': [self]
-            })
+            fold.metadata.update(
+                {
+                    'transformer': f'{type(self).__name__}.split',
+                    'params': {
+                        'num_or_size_splits': num_or_size_splits,
+                        'shuffle': shuffle,
+                    },
+                    'previous': [self],
+                }
+            )
 
         return folds
 
@@ -562,7 +562,7 @@ class StructuredDataset(Dataset):
             (defaultdict(<type 'list'>, {'Gender': ['Male', 'Female']}), ['Age'])
         """
         feature_names_dum_d = defaultdict(list)
-        feature_names_nodum = list()
+        feature_names_nodum = []
         for fname in feature_names:
             if sep in fname:
                 fname_dum, v = fname.split(sep, 1)

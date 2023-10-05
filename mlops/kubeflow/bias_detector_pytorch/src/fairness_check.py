@@ -25,9 +25,7 @@ def check_fairness(metrics):
         return False
     if abs(metrics['Average odds difference']) > 0.1:
         return False
-    if abs(metrics['False negative rate difference']) > 0.1:
-        return False
-    return True
+    return abs(metrics['False negative rate difference']) <= 0.1
 
 
 def get_secret(path, default=''):

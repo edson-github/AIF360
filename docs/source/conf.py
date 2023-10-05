@@ -266,12 +266,7 @@ def linkcode_resolve(domain, info):
     except Exception:
         lineno = None
 
-    if lineno:
-        linespec = "#L%d-L%d" % (lineno, lineno + len(source) - 1)
-    else:
-        linespec = ""
-
+    linespec = "#L%d-L%d" % (lineno, lineno + len(source) - 1) if lineno else ""
     fn = relpath(fn, start=dirname(aif360.__file__))
 
-    return "https://github.com/Trusted-AI/AIF360/blob/master/aif360/%s%s" % (
-           fn, linespec)
+    return f"https://github.com/Trusted-AI/AIF360/blob/master/aif360/{fn}{linespec}"

@@ -82,7 +82,7 @@ class TestEvaluate():
         a = _evaluate(sd1, sd2, num_iters = 1000)
         b = _evaluate(sd2, d3, num_iters = 1000)
         c = _evaluate(sd1, d3, num_iters = 1000)
-        assert a + b >= c, f"EMD must satisfy triangle inequality"
+        assert a + b >= c, "EMD must satisfy triangle inequality"
     
     def test_binary(self):
         p = pd.Series([0,1,0,1])

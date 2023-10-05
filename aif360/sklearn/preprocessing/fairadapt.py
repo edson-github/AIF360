@@ -10,8 +10,9 @@ try:
     from rpy2.robjects.conversion import localconverter
 except ImportError as error:
     from logging import warning
-    warning("{}: FairAdapt will be unavailable. To install, run:\n"
-            "pip install 'aif360[FairAdapt]'".format(error))
+    warning(
+        f"{error}: FairAdapt will be unavailable. To install, run:\npip install 'aif360[FairAdapt]'"
+    )
 from sklearn.base import BaseEstimator
 
 from aif360.sklearn.utils import check_inputs, check_groups
@@ -55,9 +56,7 @@ class FairAdapt(BaseEstimator):
 
         # R packages need to run FairAdapt
         pkgs = ('ranger', 'fairadapt')
-        # selectively install the missing packages
-        pkgs = [p for p in pkgs if not robjects.packages.isinstalled(p)]
-        if len(pkgs) > 0:
+        if pkgs := [p for p in pkgs if not robjects.packages.isinstalled(p)]:
             utls = robjects.packages.importr('utils')
             utls.chooseCRANmirror(ind=1)
             utls.install_packages(StrVector(pkgs))

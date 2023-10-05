@@ -168,9 +168,9 @@ class CalibratedEqualizedOdds(BaseEstimator, ClassifierMixin):
 
         groups, _ = check_groups(X, self.prot_attr_)
         if not set(np.unique(groups)) <= set(self.groups_):
-            raise ValueError('The protected groups from X:\n{}\ndo not '
-                             'match those from the training set:\n{}'.format(
-                                     np.unique(groups), self.groups_))
+            raise ValueError(
+                f'The protected groups from X:\n{np.unique(groups)}\ndo not match those from the training set:\n{self.groups_}'
+            )
 
         pos_idx = np.nonzero(self.classes_ == self.pos_label_)[0][0]
         X = X.iloc[:, pos_idx]

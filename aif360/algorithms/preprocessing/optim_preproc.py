@@ -203,8 +203,7 @@ class OptimPreproc(Transformer):
                             df_transformed.loc[:, Y_feature_names+D_feature_names]],
                             axis=1)
 
-        # Create a dataset out of df_dum
-        dataset_transformed = BinaryLabelDataset(
+        return BinaryLabelDataset(
             df=df_dum,
             label_names=Y_feature_names,
             protected_attribute_names=self.protected_attribute_names,
@@ -212,9 +211,8 @@ class OptimPreproc(Transformer):
             unprivileged_protected_attributes=self.unprivileged_protected_attributes,
             favorable_label=dataset.favorable_label,
             unfavorable_label=dataset.unfavorable_label,
-            metadata=dataset.metadata)
-
-        return dataset_transformed
+            metadata=dataset.metadata,
+        )
 
     def fit_transform(self, dataset, sep='=', transform_Y=True):
         """Perfom :meth:`fit` and :meth:`transform` sequentially."""
@@ -260,7 +258,4 @@ def _apply_randomized_mapping(df, dfMap,
 
     df2.loc[:, dfMap.columns.names] = [draws_possible[x] for x in draw_inds]
 
-    if rem_cols != []:
-        return pd.concat([df2, df3], axis=1)
-    else:
-        return df2
+    return pd.concat([df2, df3], axis=1) if rem_cols != [] else df2

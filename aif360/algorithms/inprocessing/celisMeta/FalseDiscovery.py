@@ -40,9 +40,7 @@ class FalseDiscovery(General):
         c_2 = l_1*(-probc_m1_0 + b*prob_z_0) + l_2*(-probc_m1_1 + b*prob_z_1)
 
         t = c_0 + c_1 + c_2
-        if return_probs:
-            return t, probc_m1_0, probc_m1_1, prob_z_0, prob_z_1
-        return t
+        return (t, probc_m1_0, probc_m1_1, prob_z_0, prob_z_1) if return_probs else t
 
     def getFuncValue(self, dist, a, b, params, samples, z_prior):
         return np.mean(np.abs(self.getValueForX(dist, a, b, params, z_prior,
@@ -59,6 +57,4 @@ class FalseDiscovery(General):
             return 0
         fdr_0 = np.sum(pos_0 & (y_true[sens == 0] == -1)) / np.sum(pos_0)
         fdr_1 = np.sum(pos_1 & (y_true[sens == 1] == -1)) / np.sum(pos_1)
-        if fdr_0 == 0 or fdr_1 == 0:
-            return 0
-        return min(fdr_0/fdr_1, fdr_1/fdr_0)
+        return 0 if fdr_0 == 0 or fdr_1 == 0 else min(fdr_0/fdr_1, fdr_1/fdr_0)

@@ -33,16 +33,20 @@ class Poisson(ScoringFunction):
             % (observed_sum, len(expectations), penalty, q)
         )
 
-        ans = observed_sum * np.log(q) + (expectations - q * expectations).sum() - penalty
-        return ans
+        return (
+            observed_sum * np.log(q)
+            + (expectations - q * expectations).sum()
+            - penalty
+        )
 
     def qmle(self, observed_sum: float, expectations: np.array):
         """
         Computes the q which maximizes score (q_mle).
         """
         direction = self.direction
-        ans = optim.bisection_q_mle(self, observed_sum, expectations, direction=direction)
-        return ans
+        return optim.bisection_q_mle(
+            self, observed_sum, expectations, direction=direction
+        )
 
     def compute_qs(self, observed_sum: float, expectations: np.array, penalty: float):
         """
@@ -70,8 +74,7 @@ class Poisson(ScoringFunction):
         if exist:
             exist, q_min, q_max = optim.direction_assertions(direction, q_min, q_max)
 
-        ans = [exist, q_mle, q_min, q_max]
-        return ans
+        return [exist, q_mle, q_min, q_max]
 
     def q_dscore(self, observed_sum, expectations, q):
         """
@@ -85,5 +88,4 @@ class Poisson(ScoringFunction):
         :param q: current value of q
         :return: q dscore/dq
         """
-        ans = observed_sum - (q * expectations).sum()
-        return ans
+        return observed_sum - (q * expectations).sum()

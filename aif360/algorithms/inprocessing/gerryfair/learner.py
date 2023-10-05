@@ -42,8 +42,7 @@ class Learner:
         reg0.fit(self.X, costs_0)
         reg1 = copy.deepcopy(self.predictor)
         reg1.fit(self.X, costs_1)
-        func = RegOracle(reg0, reg1)
-        return func
+        return RegOracle(reg0, reg1)
 
     def generate_predictions(self, q, predictions, iteration):
         """Return the classifications of the average classifier at time iter.

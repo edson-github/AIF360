@@ -3,8 +3,9 @@ try:
     import tempeh.configurations as tc
 except ImportError as error:
     from logging import warning
-    warning("{}: fetch_lawschool_gpa will be unavailable. To install, run:\n"
-            "pip install 'aif360[LawSchoolGPA]'".format(error))
+    warning(
+        f"{error}: fetch_lawschool_gpa will be unavailable. To install, run:\npip install 'aif360[LawSchoolGPA]'"
+    )
 
 from aif360.sklearn.datasets.utils import standardize_dataset
 
@@ -33,8 +34,9 @@ def fetch_lawschool_gpa(subset="all", *, usecols=None, dropcols=None,
         GPA dataset accessible by index or name.
     """
     if subset not in {'train', 'test', 'all'}:
-        raise ValueError("subset must be either 'train', 'test', or 'all'; "
-                         "cannot be {}".format(subset))
+        raise ValueError(
+            f"subset must be either 'train', 'test', or 'all'; cannot be {subset}"
+        )
 
     dataset = tc.datasets["lawschool_gpa"]()
     X_train, X_test = dataset.get_X(format=pd.DataFrame)

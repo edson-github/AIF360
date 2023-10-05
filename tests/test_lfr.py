@@ -21,9 +21,10 @@ def lfrAlgoInstance():
     privileged_groups = [{'sex': 1.0}]
     unprivileged_groups = [{'sex': 0.0}]
 
-    lfrAlgoInstance = LFR(unprivileged_groups=unprivileged_groups, privileged_groups=privileged_groups)
-
-    return lfrAlgoInstance
+    return LFR(
+        unprivileged_groups=unprivileged_groups,
+        privileged_groups=privileged_groups,
+    )
 
 
 @pytest.fixture(scope="module")
@@ -38,41 +39,30 @@ def lfrfitmodel():
 
     lfrAlgoInstance = LFR(unprivileged_groups=unprivileged_groups, privileged_groups=privileged_groups)
     ad = load_preproc_data_adult().split([0.7], shuffle=True)[0]
-    TR = lfrAlgoInstance.fit(ad)
-
-    return TR
+    return lfrAlgoInstance.fit(ad)
 
 
 def test_fit_isnumpy(lfrfitmodel):
     """The Fit function returns a numpy and it should asserted whether it really returned a numpy precision 64 bits.
     """
-    expected = True
-    if type(lfrfitmodel.learned_model) is np.ndarray:
-        res = True
-    else:
-        res = False
-    assert res == expected
+    res = type(lfrfitmodel.learned_model) is np.ndarray
+    assert res
 
 
 def test_fit_notnull(lfrfitmodel):
     """Should not be null.
     """
-    expected = False
-    if lfrfitmodel.learned_model is None:
-        res = True
-    else:
-        res = False
-    print("numpy:" + str(res))
-    assert res == expected
+    res = lfrfitmodel.learned_model is None
+    print(f"numpy:{res}")
+    assert not res
 
 
 def test_fit_notallzeros(lfrfitmodel):
     """Should not be all zeros.
     """
-    expected = False
     all_zeros = not np.any(lfrfitmodel)
-    print("allzeros:" + str(all_zeros))
-    assert all_zeros == expected
+    print(f"allzeros:{all_zeros}")
+    assert not all_zeros
 
 
 def test_fit_notNaN(lfrfitmodel):
@@ -80,7 +70,7 @@ def test_fit_notNaN(lfrfitmodel):
     """
     expected = False
     res = np.isnan(lfrfitmodel.learned_model).any()
-    print("nan:" + str(res))
+    print(f"nan:{str(res)}")
     assert res == expected
 
 
@@ -105,11 +95,10 @@ def test_transform_notNaN(lfrfitmodel, ad):
     """
     lftransformeddataset = lfrfitmodel.transform(ad, threshold=0.3)
     lstrowsum = np.sum(lftransformeddataset.features, axis=1).tolist()
-    expected = False
     allrow_zeros = not np.any(lstrowsum)
     lstcolsum = np.sum(lftransformeddataset.features, axis=0).tolist()
     allcol_zeros = not np.any(lstcolsum)
-    assert (allrow_zeros and allcol_zeros) == expected
+    assert not allrow_zeros or not allcol_zeros
 
 
 def test_transform_notNaN2(lfrfitmodel, ad):

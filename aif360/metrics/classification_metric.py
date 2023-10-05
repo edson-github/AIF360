@@ -41,7 +41,9 @@ class ClassificationMetric(BinaryLabelDatasetMetric):
             unprivileged_groups=unprivileged_groups,
             privileged_groups=privileged_groups)
 
-        if isinstance(classified_dataset, BinaryLabelDataset) or isinstance(classified_dataset, MulticlassLabelDataset) :
+        if isinstance(
+            classified_dataset, (BinaryLabelDataset, MulticlassLabelDataset)
+        ):
             self.classified_dataset = classified_dataset
         else:
             raise TypeError("'classified_dataset' should be a "
@@ -56,10 +58,10 @@ class ClassificationMetric(BinaryLabelDatasetMetric):
             fav_idx = np.logical_or.reduce(np.equal.outer(self.classified_dataset.favorable_label, self.classified_dataset.labels))
             # Replace labels with corresponding values
             self.classified_dataset.labels = np.where(fav_idx, fav_label_value, unfav_label_value)
-            
-            self.classified_dataset.favorable_label = float(fav_label_value)
-            self.classified_dataset.unfavorable_label = float(unfav_label_value)
-        
+
+            self.classified_dataset.favorable_label = fav_label_value
+            self.classified_dataset.unfavorable_label = unfav_label_value
+
         # Verify if everything except the predictions and metadata are the same
         # for the two datasets
         with self.dataset.temporarily_ignore('labels', 'scores'):

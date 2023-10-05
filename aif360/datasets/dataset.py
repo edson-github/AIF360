@@ -8,11 +8,13 @@ class Dataset(ABC):
     @abstractmethod
     def __init__(self, **kwargs):
         self.metadata = kwargs.pop('metadata', dict()) or dict()
-        self.metadata.update({
-            'transformer': '{}.__init__'.format(type(self).__name__),
-            'params': kwargs,
-            'previous': []
-        })
+        self.metadata.update(
+            {
+                'transformer': f'{type(self).__name__}.__init__',
+                'params': kwargs,
+                'previous': [],
+            }
+        )
         self.validate_dataset()
 
     def validate_dataset(self):
@@ -33,11 +35,13 @@ class Dataset(ABC):
         cpy = copy.deepcopy(self) if deepcopy else copy.copy(self)
         # preserve any user-created fields
         cpy.metadata = cpy.metadata.copy()
-        cpy.metadata.update({
-            'transformer': '{}.copy'.format(type(self).__name__),
-            'params': {'deepcopy': deepcopy},
-            'previous': [self]
-        })
+        cpy.metadata.update(
+            {
+                'transformer': f'{type(self).__name__}.copy',
+                'params': {'deepcopy': deepcopy},
+                'previous': [self],
+            }
+        )
         return cpy
 
     @abstractmethod

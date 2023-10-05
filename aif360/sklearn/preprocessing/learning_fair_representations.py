@@ -14,8 +14,9 @@ try:
     import torch.nn.functional as F
 except ImportError as error:
     from logging import warning
-    warning("{}: LearnedFairRepresentations will be unavailable. To install, run:\n"
-            "pip install 'aif360[LFR]'".format(error))
+    warning(
+        f"{error}: LearnedFairRepresentations will be unavailable. To install, run:\npip install 'aif360[LFR]'"
+    )
 
 from aif360.sklearn.utils import check_inputs, check_groups
 
@@ -193,10 +194,7 @@ class LearnedFairRepresentations(BaseEstimator, ClassifierMixin, TransformerMixi
         """
         M = softmax(-cdist(X, self.prototypes_), axis=1)
         yt = M.dot(self.coef_)
-        if yt.shape[1] == 1:
-            yt = np.c_[1-yt, yt]
-        else:
-            yt = softmax(yt, axis=1)
+        yt = np.c_[1-yt, yt] if yt.shape[1] == 1 else softmax(yt, axis=1)
         return yt
 
     def predict(self, X):

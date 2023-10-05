@@ -5,8 +5,9 @@ try:
     import tempeh.configurations as tc
 except ImportError as error:
     from logging import warning
-    warning("{}: LawSchoolGPADataset will be unavailable. To install, run:\n"
-            "pip install 'aif360[LawSchoolGPA]'".format(error))
+    warning(
+        f"{error}: LawSchoolGPADataset will be unavailable. To install, run:\npip install 'aif360[LawSchoolGPA]'"
+    )
 
 class LawSchoolGPADataset(RegressionDataset):
     """Law School GPA dataset.

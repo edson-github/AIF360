@@ -57,8 +57,9 @@ def fetch_adult(subset='all', *, data_home=None, cache=True, binary_race=True,
         (48842, 5)
     """
     if subset not in {'train', 'test', 'all'}:
-        raise ValueError("subset must be either 'train', 'test', or 'all'; "
-                         "cannot be {}".format(subset))
+        raise ValueError(
+            f"subset must be either 'train', 'test', or 'all'; cannot be {subset}"
+        )
     df = fetch_openml(data_id=1590, data_home=data_home or DATA_HOME_DEFAULT,
                       cache=cache, as_frame=True).frame
     if subset == 'train':

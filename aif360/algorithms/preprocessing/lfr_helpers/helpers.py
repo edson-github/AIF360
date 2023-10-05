@@ -28,8 +28,9 @@ def LFR_optim_objective(parameters, x_unprivileged, x_privileged, y_unprivileged
     total_loss = A_x * L_x + A_y * L_y + A_z * L_z
 
     if verbose and LFR_optim_objective.steps % print_interval == 0:
-        print("step: {}, loss: {}, L_x: {},  L_y: {},  L_z: {}".format(
-            LFR_optim_objective.steps, total_loss, L_x,  L_y,  L_z))
+        print(
+            f"step: {LFR_optim_objective.steps}, loss: {total_loss}, L_x: {L_x},  L_y: {L_y},  L_z: {L_z}"
+        )
     LFR_optim_objective.steps += 1
 
     return total_loss

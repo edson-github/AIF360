@@ -127,7 +127,7 @@ def main(opt):
     start_time = datetime.datetime.now()
     start_utime = os.times()[0]
     opt.start_time = start_time.isoformat()
-    logger.info("start time = " + start_time.isoformat())
+    logger.info(f"start time = {start_time.isoformat()}")
 
     # prediction and write results
     p = clr.predict_proba(X)
@@ -139,33 +139,33 @@ def main(opt):
         c = np.argmax(p[i, :])
         opt.outfile.write("%d %d " % (y[i], c))
         opt.outfile.write(" ".join(S[i, :].astype(str)) + " ")
-        opt.outfile.write(str(p[i, 0]) + " " + str(p[i, 1]) + "\n")
+        opt.outfile.write(f"{str(p[i, 0])} {str(p[i, 1])}" + "\n")
         n += 1
         m += 1 if c == y[i] else 0
 
     # set end and elapsed time
     end_time = datetime.datetime.now()
     end_utime = os.times()[0]
-    logger.info("end time = " + end_time.isoformat())
+    logger.info(f"end time = {end_time.isoformat()}")
     opt.end_time = end_time.isoformat()
-    logger.info("elapsed_time = " + str((end_time - start_time)))
+    logger.info(f"elapsed_time = {str(end_time - start_time)}")
     opt.elapsed_time = str((end_time - start_time))
-    logger.info("elapsed_utime = " + str((end_utime - start_utime)))
+    logger.info(f"elapsed_utime = {str(end_utime - start_utime)}")
     opt.elapsed_utime = str((end_utime - start_utime))
 
     ### output
 
     # add meta info
     opt.nos_samples = n
-    logger.info('nos_samples = ' + str(opt.nos_samples))
+    logger.info(f'nos_samples = {str(opt.nos_samples)}')
     opt.nos_correct_samples = m
-    logger.info('nos_correct_samples = ' + str(opt.nos_correct_samples))
+    logger.info(f'nos_correct_samples = {str(opt.nos_correct_samples)}')
     opt.accuracy = m / float(n)
-    logger.info('accuracy = ' + str(opt.accuracy))
+    logger.info(f'accuracy = {str(opt.accuracy)}')
     opt.negative_mean_prob = np.mean(p[:, 0])
-    logger.info('negative_mean_prob = ' + str(opt.negative_mean_prob))
+    logger.info(f'negative_mean_prob = {str(opt.negative_mean_prob)}')
     opt.positive_mean_prob = np.mean(p[:, 1])
-    logger.info('positive_mean_prob = ' + str(opt.positive_mean_prob))
+    logger.info(f'positive_mean_prob = {str(opt.positive_mean_prob)}')
 
     # output meta information
     if opt.info:
@@ -207,8 +207,9 @@ if __name__ == '__main__':
         description='pydoc is useful for learning the details.')
 
     # common options
-    ap.add_argument('--version', action='version',
-                    version='%(prog)s ' + __version__)
+    ap.add_argument(
+        '--version', action='version', version=f'%(prog)s {__version__}'
+    )
 
     apg = ap.add_mutually_exclusive_group()
     apg.set_defaults(verbose=True)
@@ -250,11 +251,11 @@ if __name__ == '__main__':
     if opt.infile is None:
         opt.infile = opt.infilep
     del vars(opt)['infilep']
-    logger.info("input_file = " + opt.infile.name)
+    logger.info(f"input_file = {opt.infile.name}")
     if opt.outfile is None:
         opt.outfile = opt.outfilep
     del vars(opt)['outfilep']
-    logger.info("output_file = " + opt.outfile.name)
+    logger.info(f"output_file = {opt.outfile.name}")
 
     ### set meta-data of script and machine
     opt.script_name = script_name

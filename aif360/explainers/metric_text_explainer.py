@@ -34,70 +34,52 @@ class MetricTextExplainer(Explainer):
             self.metric.accuracy(privileged=privileged))
 
     def average_abs_odds_difference(self):
-        return ("Average absolute odds difference (average of abs(TPR "
-                "difference) and abs(FPR difference)): {}".format(
-                    self.metric.average_abs_odds_difference()))
+        return f"Average absolute odds difference (average of abs(TPR difference) and abs(FPR difference)): {self.metric.average_abs_odds_difference()}"
 
     def average_odds_difference(self):
-        return ("Average odds difference (average of TPR difference and FPR "
-                "difference, 0 = equality of odds): {}".format(
-                    self.metric.average_odds_difference()))
+        return f"Average odds difference (average of TPR difference and FPR difference, 0 = equality of odds): {self.metric.average_odds_difference()}"
 
     def between_all_groups_coefficient_of_variation(self):
-        return "Between-group coefficient of variation: {}".format(
-            self.metric.between_all_groups_coefficient_of_variation())
+        return f"Between-group coefficient of variation: {self.metric.between_all_groups_coefficient_of_variation()}"
 
     def between_all_groups_generalized_entropy_index(self, alpha=2):
         return "Between-group generalized entropy index: {}".format(
             self.metric.between_all_groups_generalized_entropy_index(alpha=alpha))
 
     def between_all_groups_theil_index(self):
-        return "Between-group Theil index: {}".format(
-            self.metric.between_all_groups_theil_index())
+        return f"Between-group Theil index: {self.metric.between_all_groups_theil_index()}"
 
     def between_group_coefficient_of_variation(self):
-        return "Between-group coefficient of variation: {}".format(
-            self.metric.between_group_coefficient_of_variation())
+        return f"Between-group coefficient of variation: {self.metric.between_group_coefficient_of_variation()}"
 
     def between_group_generalized_entropy_index(self, alpha=2):
         return "Between-group generalized entropy index: {}".format(
             self.metric.between_group_generalized_entropy_index(alpha=alpha))
 
     def between_group_theil_index(self):
-        return "Between-group Theil index: {}".format(
-            self.metric.between_group_theil_index())
+        return f"Between-group Theil index: {self.metric.between_group_theil_index()}"
 
     def coefficient_of_variation(self):
-        return "Coefficient of variation: {}".format(
-            self.metric.coefficient_of_variation())
+        return f"Coefficient of variation: {self.metric.coefficient_of_variation()}"
 
     def consistency(self, n_neighbors=5):
         return "Consistency (Zemel, et al. 2013): {}".format(
             self.metric.consistency(n_neighbors=n_neighbors))
 
     def disparate_impact(self):
-        return ("Disparate impact (probability of favorable outcome for "
-                "unprivileged instances / probability of favorable outcome for "
-                "privileged instances): {}".format(
-                    self.metric.disparate_impact()))
+        return f"Disparate impact (probability of favorable outcome for unprivileged instances / probability of favorable outcome for privileged instances): {self.metric.disparate_impact()}"
 
     def error_rate(self, privileged=None):
         if privileged is None:
             return "Error rate (ERR = 1 - ACC): {}".format(
                 self.metric.error_rate(privileged=privileged))
-        return "Error rate on {} instances: {}".format(
-            'privileged' if privileged else 'unprivileged',
-            self.metric.error_rate(privileged))
+        return f"Error rate on {'privileged' if privileged else 'unprivileged'} instances: {self.metric.error_rate(privileged)}"
 
     def error_rate_difference(self):
-        return ("Error rate difference (error rate on unprivileged instances - "
-                "error rate on privileged instances): {}".format(
-                    self.metric.error_rate_difference()))
+        return f"Error rate difference (error rate on unprivileged instances - error rate on privileged instances): {self.metric.error_rate_difference()}"
 
     def error_rate_ratio(self):
-        return ("Error rate ratio (error rate on unprivileged instances / "
-                "error rate on privileged instances): {}".format(
-                    self.metric.error_rate_ratio()))
+        return f"Error rate ratio (error rate on unprivileged instances / error rate on privileged instances): {self.metric.error_rate_ratio()}"
 
     def false_discovery_rate(self, privileged=None):
         if privileged is None:
@@ -108,16 +90,10 @@ class MetricTextExplainer(Explainer):
             self.metric.false_discovery_rate(privileged=privileged))
 
     def false_discovery_rate_difference(self):
-        return ("False discovery rate difference (false discovery rate on "
-                "unprivileged instances - false discovery rate on privileged "
-                "instances): {}".format(
-                    self.metric.false_discovery_rate_difference()))
+        return f"False discovery rate difference (false discovery rate on unprivileged instances - false discovery rate on privileged instances): {self.metric.false_discovery_rate_difference()}"
 
     def false_discovery_rate_ratio(self):
-        return ("False discovery rate ratio (false discovery rate on "
-                "unprivileged instances - false discovery rate on privileged "
-                "instances): {}".format(
-                    self.metric.false_discovery_rate_ratio()))
+        return f"False discovery rate ratio (false discovery rate on unprivileged instances - false discovery rate on privileged instances): {self.metric.false_discovery_rate_ratio()}"
 
     def false_negative_rate(self, privileged=None):
         if privileged is None:
@@ -128,16 +104,10 @@ class MetricTextExplainer(Explainer):
             self.metric.false_negative_rate(privileged=privileged))
 
     def false_negative_rate_difference(self):
-        return ("False negative rate difference (false negative rate on "
-                "unprivileged instances - false negative rate on privileged "
-                "instances): {}".format(
-                    self.metric.false_negative_rate_difference()))
+        return f"False negative rate difference (false negative rate on unprivileged instances - false negative rate on privileged instances): {self.metric.false_negative_rate_difference()}"
 
     def false_negative_rate_ratio(self):
-        return ("False negative rate ratio (false negative rate on "
-                "unprivileged instances / false negative rate on privileged "
-                "instances): {}".format(
-                    self.metric.false_negative_rate_ratio()))
+        return f"False negative rate ratio (false negative rate on unprivileged instances / false negative rate on privileged instances): {self.metric.false_negative_rate_ratio()}"
 
     def false_omission_rate(self, privileged=None):
         if privileged is None:
@@ -148,16 +118,10 @@ class MetricTextExplainer(Explainer):
             self.metric.false_omission_rate(privileged=privileged))
 
     def falses_omission_rate_difference(self):
-        return ("False omission rate difference (falses omission rate on "
-                "unprivileged instances - falses omission rate on privileged "
-                "instances): {}".format(
-                    self.metric.falses_omission_rate_difference()))
+        return f"False omission rate difference (falses omission rate on unprivileged instances - falses omission rate on privileged instances): {self.metric.falses_omission_rate_difference()}"
 
     def false_omission_rate_ratio(self):
-        return ("False omission rate ratio (false omission rate on "
-                "unprivileged instances - false omission rate on privileged "
-                "instances): {}".format(
-                    self.metric.false_omission_rate_ratio()))
+        return f"False omission rate ratio (false omission rate on unprivileged instances - false omission rate on privileged instances): {self.metric.false_omission_rate_ratio()}"
 
     def false_positive_rate(self, privileged=None):
         if privileged is None:
@@ -168,25 +132,17 @@ class MetricTextExplainer(Explainer):
             self.metric.false_positive_rate(privileged=privileged))
 
     def false_positive_rate_difference(self):
-        return ("False positive rate difference (false positive rate on "
-                "unprivileged instances - false positive rate on privileged "
-                "instances): {}".format(
-                    self.metric.false_positive_rate_difference()))
+        return f"False positive rate difference (false positive rate on unprivileged instances - false positive rate on privileged instances): {self.metric.false_positive_rate_difference()}"
 
     def false_positive_rate_ratio(self):
-        return ("False positive rate ratio (false positive rate on "
-                "unprivileged instances / false positive rate on privileged "
-                "instances): {}".format(
-                    self.metric.false_positive_rate_ratio()))
+        return f"False positive rate ratio (false positive rate on unprivileged instances / false positive rate on privileged instances): {self.metric.false_positive_rate_ratio()}"
 
     def generalized_entropy_index(self, alpha=2):
         return "Generalized entropy index (GE(alpha)): {}".format(
             self.metric.generalized_entropy_index(alpha=alpha))
 
     def mean_difference(self):
-        return ("Mean difference (mean label value on unprivileged instances - "
-                "mean label value on privileged instances): {}".format(
-                    self.metric.mean_difference()))
+        return f"Mean difference (mean label value on unprivileged instances - mean label value on privileged instances): {self.metric.mean_difference()}"
 
     def negative_predictive_value(self, privileged=None):
         if privileged is None:
@@ -277,14 +233,10 @@ class MetricTextExplainer(Explainer):
             self.metric.positive_predictive_value(privileged=privileged))
 
     def statistical_parity_difference(self):
-        return ("Statistical parity difference (probability of favorable "
-                "outcome for unprivileged instances - probability of favorable "
-                "outcome for privileged instances): {}".format(
-                    self.metric.statistical_parity_difference()))
+        return f"Statistical parity difference (probability of favorable outcome for unprivileged instances - probability of favorable outcome for privileged instances): {self.metric.statistical_parity_difference()}"
 
     def theil_index(self):
-        return "Theil index (generalized entropy index with alpha = 1): {}".format(
-            self.metric.theil_index())
+        return f"Theil index (generalized entropy index with alpha = 1): {self.metric.theil_index()}"
 
     def true_negative_rate(self, privileged=None):
         if privileged is None:
@@ -303,10 +255,7 @@ class MetricTextExplainer(Explainer):
             self.metric.true_positive_rate(privileged=privileged))
 
     def true_positive_rate_difference(self):
-        return ("True positive rate difference (true positive rate on "
-                "unprivileged instances - true positive rate on privileged "
-                "instances): {}".format(
-                    self.metric.true_positive_rate_difference()))
+        return f"True positive rate difference (true positive rate on unprivileged instances - true positive rate on privileged instances): {self.metric.true_positive_rate_difference()}"
 
     # ============================== ALIASES ===================================
     def equal_opportunity_difference(self):

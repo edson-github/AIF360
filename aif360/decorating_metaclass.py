@@ -26,4 +26,4 @@ def dont_decorate(func):
     return func
 
 def ApplyDecorator(decorator):
-    return factory(decorator)(str('ApplyDecorator'), (), {})
+    return factory(decorator)('ApplyDecorator', (), {})

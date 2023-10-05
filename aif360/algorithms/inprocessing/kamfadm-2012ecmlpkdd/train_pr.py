@@ -155,7 +155,7 @@ def main(opt):
     start_time = datetime.datetime.now()
     start_utime = os.times()[0]
     opt.start_time = start_time.isoformat()
-    logger.info("start time = " + start_time.isoformat())
+    logger.info(f"start time = {start_time.isoformat()}")
 
     # init constants
     ns = 1
@@ -165,56 +165,54 @@ def main(opt):
         # train only once with zero coefficients
         clr = train(X, y, ns, opt)
         opt.final_loss = clr.f_loss_
-        logger.info('final_loss = ' + str(opt.final_loss))
+        logger.info(f'final_loss = {str(opt.final_loss)}')
     else:
         # train multiple times with random restarts
         clr = None
         best_loss = np.inf
         best_trial = 0
         for trial in range(opt.ntry):
-            logger.info("Trial No. " + str(trial + 1))
+            logger.info(f"Trial No. {str(trial + 1)}")
             tmp_clr = train(X, y, ns, opt)
-            logger.info("loss = " + str(tmp_clr.f_loss_))
+            logger.info(f"loss = {str(tmp_clr.f_loss_)}")
             if tmp_clr.f_loss_ < best_loss:
                 clr = tmp_clr
                 best_loss = clr.f_loss_
                 best_trial = trial + 1
         opt.final_loss = best_loss
-        logger.info('final_loss = ' + str(opt.final_loss))
+        logger.info(f'final_loss = {str(opt.final_loss)}')
         opt.best_trial = best_trial
-        logger.info('best_trial = ' + str(opt.best_trial))
+        logger.info(f'best_trial = {str(opt.best_trial)}')
 
     # set end and elapsed time
     end_time = datetime.datetime.now()
     end_utime = os.times()[0]
-    logger.info("end time = " + end_time.isoformat())
+    logger.info(f"end time = {end_time.isoformat()}")
     opt.end_time = end_time.isoformat()
-    logger.info("elapsed_time = " + str((end_time - start_time)))
+    logger.info(f"elapsed_time = {str(end_time - start_time)}")
     opt.elapsed_time = str((end_time - start_time))
-    logger.info("elapsed_utime = " + str((end_utime - start_utime)))
+    logger.info(f"elapsed_utime = {str(end_utime - start_utime)}")
     opt.elapsed_utime = str((end_utime - start_utime))
 
     ### output
 
     # add info
     opt.nos_samples = X.shape[0]
-    logger.info('nos_samples = ' + str(opt.nos_samples))
+    logger.info(f'nos_samples = {str(opt.nos_samples)}')
     opt.nos_features = X.shape[1]
-    logger.info('nos_features = ' + str(X.shape[1]))
+    logger.info(f'nos_features = {str(X.shape[1])}')
     opt.classifier = clr.__class__.__name__
-    logger.info('classifier = ' + opt.classifier)
+    logger.info(f'classifier = {opt.classifier}')
     opt.fadm_version = fadm_version
-    logger.info('fadm_version = ' + opt.fadm_version)
+    logger.info(f'fadm_version = {opt.fadm_version}')
     opt.sklearn_version = sklearn_version
-    logger.info('sklearn_version = ' + opt.sklearn_version)
+    logger.info(f'sklearn_version = {opt.sklearn_version}')
 #    opt.training_score = clr.score(X, y)
 #    logger.info('training_score = ' + str(opt.training_score))
 
     # write file
     pickle.dump(clr, opt.outfile)
-    info = {}
-    for key, key_val in vars(opt).items():
-        info[key] = str(key_val)
+    info = {key: str(key_val) for key, key_val in vars(opt).items()}
     pickle.dump(info, opt.outfile)
 
     ### post process
@@ -246,8 +244,9 @@ if __name__ == '__main__':
         description='pydoc is useful for learning the details.')
 
     # common options
-    ap.add_argument('--version', action='version',
-                    version='%(prog)s ' + __version__)
+    ap.add_argument(
+        '--version', action='version', version=f'%(prog)s {__version__}'
+    )
 
     apg = ap.add_mutually_exclusive_group()
     apg.set_defaults(verbose=True)
@@ -291,11 +290,11 @@ if __name__ == '__main__':
     if opt.infile is None:
         opt.infile = opt.infilep
     del vars(opt)['infilep']
-    logger.info("input_file = " + opt.infile.name)
+    logger.info(f"input_file = {opt.infile.name}")
     if opt.outfile is None:
         opt.outfile = opt.outfilep
     del vars(opt)['outfilep']
-    logger.info("output_file = " + opt.outfile.name)
+    logger.info(f"output_file = {opt.outfile.name}")
 
     ### set meta-data of script and machine
     opt.script_name = script_name

@@ -4,13 +4,15 @@ fairlearn.reductions.GridSearch
 available in the https://github.com/fairlearn/fairlearn library
 licensed under the MIT Licencse, Copyright Microsoft Corporation
 """
+
 from logging import warning
 
 try:
     import fairlearn.reductions as red
 except ImportError as error:
-    warning("{}: GridSearchReduction will be unavailable. To install, run:\n"
-            "pip install 'aif360[Reductions]'".format(error))
+    warning(
+        f"{error}: GridSearchReduction will be unavailable. To install, run:\npip install 'aif360[Reductions]'"
+    )
 import pandas as pd
 
 from aif360.algorithms import Transformer

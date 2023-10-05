@@ -91,7 +91,7 @@ class AdultDataset(StandardDataset):
             test = pd.read_csv(test_path, header=0, names=column_names,
                 skipinitialspace=True, na_values=na_values)
         except IOError as err:
-            print("IOError: {}".format(err))
+            print(f"IOError: {err}")
             print("To use this class, please download the following files:")
             print("\n\thttps://archive.ics.uci.edu/ml/machine-learning-databases/adult/adult.data")
             print("\thttps://archive.ics.uci.edu/ml/machine-learning-databases/adult/adult.test")

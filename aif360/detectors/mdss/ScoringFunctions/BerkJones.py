@@ -41,27 +41,17 @@ class BerkJones(ScoringFunction):
         """
         alpha = self.alpha
 
-        if q < alpha:
-            q = alpha
-
+        q = max(q, alpha)
         assert q > 0, (
             "Warning: calling compute_score_given_q with "
             "observed_sum=%.2f, expectations of length=%d, penalty=%.2f, q=%.2f, alpha=%.3f"
             % (observed_sum, len(expectations), penalty, q, alpha)
         )
         if q == 1:
-            ans = observed_sum * np.log(q / alpha) - penalty
-            return ans
-
+            return observed_sum * np.log(q / alpha) - penalty
         a = observed_sum * np.log(q / alpha)
         b = (len(expectations) - observed_sum) * np.log((1 - q) / (1 - alpha))
-        ans = (
-            a
-            + b
-            - penalty
-        )
-
-        return ans
+        return a + b - penalty
 
     def qmle(self, observed_sum: float, expectations: np.array):
         """
@@ -79,10 +69,7 @@ class BerkJones(ScoringFunction):
         else:
             q = observed_sum / len(expectations)
 
-        if (q < alpha):
-            return alpha
-
-        return q
+        return max(q, alpha)
 
     def compute_qs(self, observed_sum: float, expectations: np.array, penalty: float):
         """
@@ -109,5 +96,4 @@ class BerkJones(ScoringFunction):
             q_min = 0
             q_max = 0
 
-        ans = [exist, q_mle, q_min, q_max]
-        return ans
+        return [exist, q_mle, q_min, q_max]

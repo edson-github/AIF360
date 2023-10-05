@@ -33,13 +33,14 @@ def dataset_wrapper(outcome, protected, unprivileged_groups, privileged_groups, 
                       columns=['outcome'])
     df['race'] = protected
 
-    dataset = BinaryLabelDataset(favorable_label=favorable_label,
-                                 unfavorable_label=unfavorable_label,
-                                 df=df,
-                                 label_names=['outcome'],
-                                 protected_attribute_names=['race'],
-                                 unprivileged_protected_attributes=unprivileged_groups)
-    return dataset
+    return BinaryLabelDataset(
+        favorable_label=favorable_label,
+        unfavorable_label=unfavorable_label,
+        df=df,
+        label_names=['outcome'],
+        protected_attribute_names=['race'],
+        unprivileged_protected_attributes=unprivileged_groups,
+    )
 
 # Compute the accuaracy and predicted label using the given test dataset
 def evaluate(model, X_test, y_test):

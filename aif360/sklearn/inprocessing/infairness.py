@@ -79,10 +79,7 @@ class InFairnessNet(NeuralNet):
           Whether train mode should be used or not.
 
         """
-        if training:
-            return y_pred.loss
-        else:
-            return super().get_loss(y_pred.y_pred, y_true)
+        return y_pred.loss if training else super().get_loss(y_pred.y_pred, y_true)
 
     def train_step_single(self, batch, **fit_params):
         """Compute y_pred, loss value, and update net's gradients.

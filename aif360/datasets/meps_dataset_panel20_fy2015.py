@@ -19,9 +19,11 @@ def default_preprocessing(df):
     5. Compute UTILIZATION, binarize it to 0 (< 10) and 1 (>= 10)
     """
     def race(row):
-        if ((row['HISPANX'] == 2) and (row['RACEV2X'] == 1)):  #non-Hispanic Whites are marked as WHITE; all others as NON-WHITE
-            return 'White'
-        return 'Non-White'
+        return (
+            'White'
+            if ((row['HISPANX'] == 2) and (row['RACEV2X'] == 1))
+            else 'Non-White'
+        )
 
     df['RACEV2X'] = df.apply(lambda row: race(row), axis=1)
     df = df.rename(columns = {'RACEV2X' : 'RACE'})
@@ -94,7 +96,7 @@ class MEPSDataset20(StandardDataset):
         try:
             df = pd.read_csv(filepath, sep=',', na_values=na_values)
         except IOError as err:
-            print("IOError: {}".format(err))
+            print(f"IOError: {err}")
             print("To use this class, please follow the instructions in:")
             print("\n\t{}\n".format(os.path.abspath(os.path.join(
                os.path.abspath(__file__), '..', '..', 'data', 'raw', 'meps', 'README.md'))))

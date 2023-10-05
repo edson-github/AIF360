@@ -127,7 +127,7 @@ def test_target_encoding(y, criterion, raises):
     if criterion == nn.MSELoss:
         y = np.array(y, dtype='float32')
     classes = np.unique(y).tolist()
-    if criterion == nn.BCEWithLogitsLoss or criterion == nn.MSELoss:
+    if criterion in [nn.BCEWithLogitsLoss, nn.MSELoss]:
         ndim = 1 if y.ndim < 2 else y.shape[1]
     else:
         ndim = len(classes)

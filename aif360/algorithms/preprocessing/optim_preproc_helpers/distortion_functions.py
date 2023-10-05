@@ -30,10 +30,7 @@ def get_distortion_adult(vold, vnew):
             return int(v)
 
     def adjustAge(a):
-        if a == '>=70':
-            return 70.0
-        else:
-            return float(a)
+        return 70.0 if a == '>=70' else float(a)
 
     def adjustInc(a):
         if a == "<=50K":
@@ -71,10 +68,7 @@ def get_distortion_adult(vold, vnew):
     incNew = adjustInc(vnew['Income Binary'])
 
     # final penalty according to income
-    if incOld > incNew:
-        return 1.0
-    else:
-        return 0.0
+    return 1.0 if incOld > incNew else 0.0
 
 
 def get_distortion_german(vold, vnew):
@@ -95,12 +89,16 @@ def get_distortion_german(vold, vnew):
     """
 
     # Distortion cost
-    distort = {}
-    distort['credit_history'] = pd.DataFrame(
-                                {'None/Paid': [0., 1., 2.],
-                                'Delay':      [1., 0., 1.],
-                                'Other':      [2., 1., 0.]},
-                                index=['None/Paid', 'Delay', 'Other'])
+    distort = {
+        'credit_history': pd.DataFrame(
+            {
+                'None/Paid': [0.0, 1.0, 2.0],
+                'Delay': [1.0, 0.0, 1.0],
+                'Other': [2.0, 1.0, 0.0],
+            },
+            index=['None/Paid', 'Delay', 'Other'],
+        )
+    }
     distort['employment'] = pd.DataFrame(
                             {'Unemployed':    [0., 1., 2.],
                             '1-4 years':      [1., 0., 1.],
@@ -153,11 +151,12 @@ def get_distortion_compas(vold, vnew):
         d (value) : distortion value
     """
     # Distortion cost
-    distort = {}
-    distort['two_year_recid'] = pd.DataFrame(
-                                {'No recid.':     [0., 2.],
-                                'Did recid.':     [2., 0.]},
-                                index=['No recid.', 'Did recid.'])
+    distort = {
+        'two_year_recid': pd.DataFrame(
+            {'No recid.': [0.0, 2.0], 'Did recid.': [2.0, 0.0]},
+            index=['No recid.', 'Did recid.'],
+        )
+    }
     distort['age_cat'] = pd.DataFrame(
                             {'Less than 25':    [0., 1., 2.],
                             '25 to 45':         [1., 0., 1.],

@@ -78,7 +78,7 @@ class GermanDataset(StandardDataset):
             df = pd.read_csv(filepath, sep=' ', header=None, names=column_names,
                              na_values=na_values)
         except IOError as err:
-            print("IOError: {}".format(err))
+            print(f"IOError: {err}")
             print("To use this class, please download the following files:")
             print("\n\thttps://archive.ics.uci.edu/ml/machine-learning-databases/statlog/german/german.data")
             print("\thttps://archive.ics.uci.edu/ml/machine-learning-databases/statlog/german/german.doc")

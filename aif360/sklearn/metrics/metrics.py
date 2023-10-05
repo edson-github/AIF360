@@ -190,9 +190,7 @@ def intersection(func, y_true, y_pred=None, prot_attr=None, sample_weight=None,
                                   **kwargs))
         else:
             func_vals.append(func(*sub, **kwargs))
-    if return_groups:
-        return func_vals, unique_groups
-    return func_vals
+    return (func_vals, unique_groups) if return_groups else func_vals
 
 def one_vs_rest(func, y_true, y_pred=None, prot_attr=None, return_groups=False,
                 **kwargs):
@@ -250,13 +248,11 @@ def one_vs_rest(func, y_true, y_pred=None, prot_attr=None, return_groups=False,
     """
     groups, _ = check_groups(y_true, prot_attr)
     unique_groups = np.unique(groups)
-    func_vals = []
-    for g in unique_groups:
-        func_vals.append(func(y_true, y_pred, prot_attr=prot_attr, priv_group=g,
-                              **kwargs))
-    if return_groups:
-        return func_vals, unique_groups
-    return func_vals
+    func_vals = [
+        func(y_true, y_pred, prot_attr=prot_attr, priv_group=g, **kwargs)
+        for g in unique_groups
+    ]
+    return (func_vals, unique_groups) if return_groups else func_vals
 
 
 # =========================== SCORER FACTORY =================================

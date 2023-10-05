@@ -105,15 +105,17 @@ class PrejudiceRemover(Transformer):
                                          positive_class_val, sensitive_attrs,
                                          single_sensitive, privileged_vals):
         """Format the data for the Kamishima code and save it."""
-        x = []
-        for col in df:
-            if col != class_attr and col not in sensitive_attrs:
-                x.append(np.array(df[col].values, dtype=np.float64))
-        x.append(np.array(single_sensitive.isin(privileged_vals),
-                          dtype=np.float64))
-        x.append(np.array(df[class_attr] == positive_class_val,
-                          dtype=np.float64))
-
+        x = [
+            np.array(df[col].values, dtype=np.float64)
+            for col in df
+            if col != class_attr and col not in sensitive_attrs
+        ]
+        x.extend(
+            (
+                np.array(single_sensitive.isin(privileged_vals), dtype=np.float64),
+                np.array(df[class_attr] == positive_class_val, dtype=np.float64),
+            )
+        )
         fd, name = tempfile.mkstemp()
         os.close(fd)
         np.savetxt(name, np.array(x).T)
